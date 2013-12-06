@@ -29,7 +29,7 @@ while True:
 	# print msg
 	if msg[0]=='0':
 		print "Nodo Reportandose"
-		
+
 		node = msg[1]
 		nodeHost = msg[2]
 		nodePort = msg[3]
@@ -55,7 +55,7 @@ while True:
 		'''Answer with Available Data Nodes'''
 		nodesList = [] # List of datanodes
 
-		''''message client a json with the list of nodes available'''
+		''''Message client a json with the list of nodes available'''
 		for name, addr, port in  db.GetDataNodes():
 			nodesList.append((name,(addr,port)))
 
@@ -67,6 +67,6 @@ while True:
 
 		''''Convert data to json format'''	
 		message = json.dumps(dict(nodesList))
-
+	# elif msg[0] =='3':
 	s.sendto(message,address)
 s.close()
