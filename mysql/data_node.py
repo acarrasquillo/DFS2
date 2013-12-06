@@ -22,4 +22,36 @@
 # 	
 # 	" Usage : ./data_node <port> <name of chunk directory>"
 # 	
-##############################################################
+##############################################################\
+
+from mdsConf import mds_PORT, mds_HOST, BASE_DIR
+import sys
+import os
+from socket import *
+
+try:
+    port = int(sys.argv[1])
+    path = sys.argv[2]
+except:
+    raise SystemExit(" Usage : ./data-node <port> <name of chunk directory>")
+
+try:
+    os.makedirs(os.path.join(BASE_DIR, path))
+    chunkDir = os.path.join(BASE_DIR, path)
+except:
+	pass
+
+s = socket(AF_INET,SOCK_DGRAM) # Create the node socket UDP protocol
+s.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1) # Allow socket to be reused
+s.bind((HOST,port)) # Bind node on server <port>
+'''Mensaje'''
+message = "Hi mds"
+s.sendto(message,(mds_HOST,mds_PORT))
+
+while True:
+	# Accept connections from nodes and clients on socket
+	recievedMsg,address = s.recvfrom(1024)
+	print recievedMsg
+
+s.close()
+
