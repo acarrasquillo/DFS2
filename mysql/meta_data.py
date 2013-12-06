@@ -15,6 +15,7 @@ print "Connecting to database..."
 db.Connect()
 
 '''Create directory for files in project base path'''
+
 try:
     os.makedirs(os.path.join(BASE_DIR, 'dfs-files'))
     dfsDir = os.path.join(BASE_DIR, 'dfs-files' )
@@ -23,7 +24,20 @@ except OSError as error:
 
 while True:
 	# Accept connections from nodes and clients on socket
-	message = 'recibido'
-	recievedMsg,address = s.recvfrom(1024)
+	recievedMsg, address = s.recvfrom(1024)
+	msg = recievedMsg.split()
+	print msg
+	if msg[0]=="Report":
+		print "Nodo Reportandose"
+		node = msg[1]
+		nodeHost = msg[2]
+		nodePort = msg[3]
+		db.AddDataNode(node, nodeHost, nodePort)
+		print "Testing if node was inserted"
+		print db.CheckNode(node)
+		print "Testing all Available data nodes"
+		for name, addr, port in  db.GetDataNodes():
+			print name, addr, port
+		message = "Nodo Reportado"
 	s.sendto(message,address)
 s.close()
