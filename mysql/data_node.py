@@ -48,7 +48,7 @@ s = socket(AF_INET,SOCK_DGRAM) # Create the node socket UDP protocol
 s.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1) # Allow socket to be reused
 s.bind((HOST,port)) # Bind node on server <port>
 '''Mensaje'''
-message = "report %s %s %s" % (path,HOST,port)
+message = "0 %s %s %s" % (path,HOST,port)
 s.sendto(message,(mds_HOST,mds_PORT))
 
 while True:

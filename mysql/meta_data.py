@@ -26,9 +26,10 @@ while True:
 	# Accept connections from nodes and clients on socket
 	recievedMsg, address = s.recvfrom(1024)
 	msg = recievedMsg.split()
-	print msg
-	if msg[0]=="Report":
+	# print msg
+	if msg[0]=='0':
 		print "Nodo Reportandose"
+
 		node = msg[1]
 		nodeHost = msg[2]
 		nodePort = msg[3]
@@ -38,6 +39,34 @@ while True:
 		print "Testing all Available data nodes"
 		for name, addr, port in  db.GetDataNodes():
 			print name, addr, port
-		message = "Nodo Reportado"
+		message = 'Nodo Reportado'
+	elif msg[0]=='1':
+		print "List Command"
+
+		message = '['
+		#gather all the files and their size and display them
+		print db.GetFiles()
+		for data in db.GetFiles():
+			message = message + '{ "File":"' + data[0]+'", "Size":"'+str(data[1])+'"},'
+		message = message[0:len(message)-1] +']'
+	elif msg[0] == '2':
+		print "Command write"
+
+		'''Answer with Available Data Nodes'''
+		nodesList = [] # List of datanodes
+
+		''''Message client a json with the list of nodes available'''
+		for name, addr, port in  db.GetDataNodes():
+			nodesList.append((name,(addr,port)))
+
+		'''Add to the message the available nodes #'''	
+		if len(nodesList) == 0:
+			nodesList.append(('msg',0))
+		else:
+			nodesList.insert(0,('msg',len(nodesList)))
+
+		''''Convert data to json format'''	
+		message = json.dumps(dict(nodesList))
+	# elif msg[0] =='3':
 	s.sendto(message,address)
 s.close()
