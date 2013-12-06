@@ -44,17 +44,18 @@ try:
 except:
 	pass
 
-s = socket(AF_INET,SOCK_DGRAM) # Create the node socket UDP protocol
-s.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1) # Allow socket to be reused
-s.bind((HOST,port)) # Bind node on server <port>
+s = socket(AF_INET,SOCK_STREAM)    # Create the server socket TCP protocol
+s.connect((mds_HOST,mds_PORT))
 '''Mensaje'''
 message = "0 %s %s %s" % (path,HOST,port)
-s.sendto(message,(mds_HOST,mds_PORT))
+s.send(message)
+answer = s.recv(1024)
+print answer                                                                                                                                                                                                                                                                                           
 
 while True:
 	# Accept connections from nodes and clients on socket
-	recievedMsg,address = s.recvfrom(1024)
+	conn, addr = s.accept()
+	recievedMsg = conn.recv(1024)
 	print recievedMsg
 
 s.close()
-

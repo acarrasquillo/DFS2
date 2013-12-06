@@ -6,14 +6,14 @@ import json
 
 # Create an object of type mds_db
 db = mds_db()
-
-s = socket(AF_INET,SOCK_DGRAM)    # Create the server socket UDP protocol
-s.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1) # Allow socket to be reused
-s.bind((mds_HOST,mds_PORT))  # Bind the server on mds_PORT 
-
 print "Connecting to database..." 
 db.Connect()
 
+'''Set up server'''
+s = socket(AF_INET,SOCK_STREAM)    # Create the server socket TCP protocol
+s.bind((mds_HOST,mds_PORT))  # Bind the server on mds_PORT
+s.listen(1) 
+conn,address = s.accept()
 '''Create directory for files in project base path'''
 
 try:
@@ -24,12 +24,11 @@ except OSError as error:
 
 while True:
 	# Accept connections from nodes and clients on socket
-	recievedMsg, address = s.recvfrom(1024)
+	recievedMsg = conn.recv(1024)
 	msg = recievedMsg.split()
 	# print msg
 	if msg[0]=='0':
 		print "Nodo Reportandose"
-
 		node = msg[1]
 		nodeHost = msg[2]
 		nodePort = msg[3]
@@ -68,5 +67,5 @@ while True:
 		''''Convert data to json format'''	
 		message = json.dumps(dict(nodesList))
 	# elif msg[0] =='3':
-	s.sendto(message,address)
+	conn.send(message)
 s.close()
