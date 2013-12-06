@@ -46,11 +46,7 @@ except:
     					 )
 # If argument 1 is an ip
 # Copy from DFS to computer (read)
-s = socket(AF_INET,SOCK_DGRAM)    # Create the server socket UDP protocol
-s.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1) # Allow socket to be reused
-s.bind(("localhost",8001))  # Bind the server on mds_PORT 
-message = "" # mesage variable
-
+s = socket(AF_INET,SOCK_STREAM)    # Create the server socket TCP protocol
 
 # If argument 2 is an ip
 # Copy from computer to DFS (write)
@@ -59,13 +55,14 @@ if validateIP(arg2.split(':')[0]):
 	''' Make Copy from computer to DFS (write) '''
 	mds_HOST = arg2.split(':')[0] # DFS Host
 	print mds_HOST, mds_PORT
+	s.connect((mds_HOST,mds_PORT))
 	dfs_filePath = arg2.split(':')[1] # Path of the file in the dfs
 	comp_filePath = arg1 #Path of the file in the computer
 	message = "2"
-	s.sendto(message,(mds_HOST, mds_PORT))
+	s.send(message)
 	while True:
 		'''Accept connections from DFS and Nodes on socket'''
-		recievedMsg,address = s.recvfrom(1024)
+		recievedMsg = s.recv(1024)
 		data = json.loads(recievedMsg)
 		msg = data.pop('msg')
 		
@@ -107,19 +104,19 @@ def makeChunks(inputFile,noOfNodes):
 		fn1 = data[i:i] + chunkSize
 		chunkList.append(("chunk%s",fn1)) %i
 
-		message = json.dumps(dict(chunkList))
+		j = json.dumps(dict(chunkList))
 
-		return message
+		return j
 
-#This function join all the chunks contained in list[]
-def joinChunks(list):
+# #This function join all the chunks contained in list[]
+# def joinChunks(list):
 
-	#Go through all the chunks in list
-	for data in list:
+# 	#Go through all the chunks in list
+# 	for data in list:
 
 		
-		#fl is the variable that will contain the joined chunks
-		fl=None
+# 		#fl is the variable that will contain the joined chunks
+# 		fl=None
 
-		#put the ned data at the end of fl
-		fl.append(data)
+# 		#put the ned data at the end of fl
+# 		fl.append(data)
