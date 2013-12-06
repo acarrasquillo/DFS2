@@ -50,6 +50,7 @@ s.connect((mds_HOST,mds_PORT))
 message = "0 %s %s %s" % (path,HOST,port)
 s.send(message)
 answer = s.recv(1024)
+s.close()
 print answer                                                                                                                                                                                                                                                                                           
 
 while True:
