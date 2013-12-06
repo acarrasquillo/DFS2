@@ -1,0 +1,35 @@
+###############################################
+#Este es el output de haber corrido el commando
+#
+#	$ python test.py
+###############################################
+
+
+
+Connecting to database
+Testing node addition
+
+Testing if node was inserted
+A tupple with node name and connection info must appear
+('n0', 'localhost', 80L, 1L)
+
+Testing all Available data nodes
+n0 localhost 80
+
+Inserting two files to DB
+
+Choteando one of the steps of the assignment :) ...
+Files in the database
+/hola/cheo.txt 20
+/opt/blah.txt 30
+
+Adding blocks to the file, duplicate message if not the first time running
+this script
+Won't duplicate
+
+Testing retreiving Inode info
+File Size is: 20
+and can be constructed from: 
+n0 localhost 80 1
+
+Closing connection

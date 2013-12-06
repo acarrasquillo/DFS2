@@ -1,0 +1,103 @@
+Roxana Gonzalez
+Abimael Carrasquillo
+Miguel Roque
+
+Proyecto: Distributed File System
+
+0 - Librerias de Python para el proyecto DFS
+
+0.1 - mysql-python
+
+Esta librería permitirá la comunicación de metadata server con la base de datos.
+
+0.2 - sys
+
+Para recursos que puede proveer el sistema operativo que pueden ser utilizados en el DFS.
+
+0.3 - threading
+
+Para paralelizar el almacenamiento de data en los nodos de DFS.
+
+0.4 - sockets
+
+Para la comunicación entre el metadata server, cliente y los nodos.
+
+0.5 - datetime
+
+Esta librería será utilizada para tomar la fecha del sistema en la creación de ID's únicos.
+
+1. Se instaló el servidor de mysql utilizando un package manager
+
+2 - Se inicializó el servidor de mysql y se configuró el usuario y la base de datos para el proyecto.
+
+2.1 - Se inicializa el servidor de mysql (MACOSX)
+
+$ mysql.server start
+
+2.2 - Se entra al servidor como root
+
+$ mysql -u root
+
+2.3 - Se crea un usuario llamado ram para el proyecto
+
+mysql > CREATE USER ‘ram’ IDENTIFIED BY ‘password’
+
+2.4 - Se crea la base de datos para el proyecto
+
+mysql> create database ccom4017_dfs_ram ;
+
+2.5- Se autoriza al usuario privilegios en la base de datos
+
+mysql > GRANT ALL PRIVILEGES ON ccom4017_dfs_ram.* TO ‘ram’@'localhost'
+
+2.6 En el file mds_db.py se modifican las variables DB_NAME, DB_USER, DB_PASS
+
+Line 15: DB_NAME = “ccom4017_dfs_ram”
+Line 16: DB_USER = “ram”
+Line 17: DB_PASS = “password”
+
+2.7 En el file db.sql se modifica que base se utilizará para crear las tablas
+
+Line 2: use ccom4017_dfs_ram
+
+2.8 - Se crean las tablas en la base de datos con ese usuario
+
+$ mysql -u ram -p < db.sql
+
+3.0 - Se corrio el archivo de prueba test.py
+###############################################
+#Este es el output de haber corrido el commando
+#
+#       $ python test.py
+###############################################
+
+
+
+Connecting to database
+Testing node addition
+
+Testing if node was inserted
+A tupple with node name and connection info must appear
+('n0', 'localhost', 80L, 1L)
+
+Testing all Available data nodes
+n0 localhost 80
+
+Inserting two files to DB
+
+Choteando one of the steps of the assignment :) ...
+Files in the database
+/hola/cheo.txt 20
+/opt/blah.txt 30
+
+Adding blocks to the file, duplicate message if not the first time running
+this script
+Won't duplicate
+
+Testing retreiving Inode info
+File Size is: 20
+and can be constructed from:
+n0 localhost 80 1
+
+Closing connection
+
