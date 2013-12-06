@@ -28,7 +28,7 @@ from mdsConf import mds_PORT, mds_HOST, BASE_DIR
 import sys
 import os
 from socket import *
-
+HOST = "localhost"
 try:
     port = int(sys.argv[1])
     path = sys.argv[2]
