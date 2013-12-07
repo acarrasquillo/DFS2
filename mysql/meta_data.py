@@ -11,16 +11,11 @@ db.Connect()
 
 '''Set up server'''
 s = socket(AF_INET,SOCK_STREAM)    # Create the server socket TCP protocol
+s.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
 s.bind((mds_HOST,mds_PORT))  # Bind the server on mds_PORT
 s.listen(1) 
 '''Create directory for files in project base path'''
-
-try:
-    os.makedirs(os.path.join(BASE_DIR, 'dfs-files'))
-    dfsDir = os.path.join(BASE_DIR, 'dfs-files' )
-except OSError as error:
-	pass
-
+   
 while True:
 	'''Accept connections on mds'''
 	conn,address = s.accept()
@@ -69,8 +64,7 @@ while True:
 		''''Convert data to json format'''	
 		message = json.dumps(dict(nodesList))
 	# elif msg[0] =='3':
-	conn.send(message)
-	'''Close connection'''
-	conn.close()
+	conn.send(message) #Send message	
+	conn.close() #Close connection
 	break
-s.close()
+s.close() 

@@ -32,7 +32,7 @@
 from socket import *
 from mdsConf import mds_PORT, validateIP
 import json
-
+import sys
 
 try:
     arg1 = sys.argv[1]
@@ -78,6 +78,7 @@ if validateIP(arg2.split(':')[0]):
 		'''Copying chunks to nodes'''
 		for node,host_port in data.items():
 			'''Send the chunk to the node'''
+		break
 
 
 

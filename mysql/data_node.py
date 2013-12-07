@@ -56,6 +56,7 @@ print answer
 # '''Now create a new socket to listen for commands'''
 # s = socket(AF_INET,SOCK_STREAM)
 # s.bind((HOST,port))
+# s.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
 # s.listen(1)
 # while True:
 # 	'''Accept connections on node socket'''

@@ -10,20 +10,15 @@ except:
 	raise SystemExit(" Usage :  python list.py <meta data server ip-address>")
 
 mds_HOST = sys.argv[1]
-s = socket(AF_INET,SOCK_DGRAM) # Create the node socket UDP protocol
-s.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1) # Allow socket to be reused
-s.bind((HOST,1002)) # Bind node on server <port>
-
-# Send message to metadata server 
+s = socket(AF_INET,SOCK_STREAM)    # Create the server socket TCP protocol
+s.connect((mds_HOST,mds_PORT))
+'''Send message to metadata server''' 
 message = "1"
-s.sendto(message,("localhost",mds_PORT))
-
-while True:
-	# Accept connections from nodes and clients on socket
-	recievedMsg,address = s.recvfrom(1024)
-	msj = recievedMsg
-	break
+s.send(message)
+'''Recieve message'''
+recievedMsg = s.recv(1024)
+'''Close Socket'''
 s.close()
-d = json.loads(msj)
+d = json.loads(recievedMsg)
 for i in d:
 	print i['File'] + " " + i['Size'] 
