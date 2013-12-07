@@ -128,16 +128,20 @@ while True:
 
 		'''Test the file and inode info'''
 		if message == 'True':
+			
 			print "Testing retreiving Inode info"
+			
 			fsize, chunks_info = db.GetFileInode(dfsFilepath)
+			
 			print "File Size is:", fsize
+			
 			print "and can be constructed from: "
+			
 			for  node, address, port, chunk in chunks_info:
 				print node, address, port, chunk
-				print
 
 	
-	'''Respond to the recieved connection and close the socket'''
+	'''Respond to the recieved connection and close the socket'''	
 	conn.send(message) #Send message	
 	conn.close() #Close connection
 
