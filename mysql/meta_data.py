@@ -64,6 +64,7 @@ while True:
 		''''Convert data to json format'''	
 		message = json.dumps(dict(nodesList))
 	# elif msg[0] =='3':
+	# 	db.AddBlockToInode("/hola/cheo.txt", [("n0", 1), ("n1", 1)])
 	conn.send(message) #Send message	
 	conn.close() #Close connection
 	break

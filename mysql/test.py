@@ -51,7 +51,7 @@ print
 print "Adding blocks to the file, duplicate message if not the first time running"
 print "this script"
 try:
-	db.AddBlockToInode("/hola/cheo.txt", [("n0", 1), ("n1", 1)])
+	db.AddBlockToInode("/hola/cheo.txt",[("n0",1),("n1",1)])
 except:
 	print "Won't duplicate"
 print
