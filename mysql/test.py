@@ -63,7 +63,6 @@ print "File Size is:", fsize
 print "and can be constructed from: "
 for  node, address, port, chunk in chunks_info:
 	print node, address, port, chunk
-print
 
 print "Closing connection"
 db.Close() 

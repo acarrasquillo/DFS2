@@ -1,3 +1,27 @@
+##############################################################
+#	DFS
+#	
+#	Project: Distributed File System
+#	University of Puerto Rico, Rio Piedras Campus
+#   Dept. of Computer Science
+#   CCOM 4017: Operating Systems - Fall'13
+#   
+#   Instructor: 
+#       Jose Ortiz-Ubarri
+#                           
+#   Group:
+#       Roxana Gonzalez (xxx-xx-xxxx)
+#       Miguel Roque (xxx-xx-xxxx)
+#       Abimael Carrasquillo Ayala (xxx-xx-xxxx)
+#	
+#	The data node is the process that does receive and saves the chunks of information of the files. 
+#	It must register with the metadata server as soon as it starts its execution.
+# 	The data node also receives the data from the clients when the client wants to write a file, and 
+# 	returns the data when the client wants to read a file.
+# 	
+# 	" Usage : python metadata.py"
+# 	
+##############################################################\
 from mdsConf import *
 
 # Create an object of type mds_db
@@ -17,7 +41,7 @@ while True:
 	conn,address = s.accept()
 	# Accept connections from nodes and clients on socket
 	recievedMsg = conn.recv(1024)
-	msg = recievedMsg.split(' ')
+	msg = recievedMsg.split('|')
 	print msg
 	# print msg
 	if msg[0]=='0':
@@ -42,24 +66,75 @@ while True:
 			message = message + '{ "File":"' + data[0]+'", "Size":"'+str(data[1])+'"},'
 		message = message[0:len(message)-1] +']'
 	elif msg[0] == '2':
+		
 		print "Command write"
 
 		'''Answer with Available Data Nodes'''
+		
 		nodesList = [] # List of datanodes
 
 		''''Message client a json with the list of nodes available'''
+		
 		for name, addr, port in  db.GetDataNodes():
 			nodesList.append((name,(addr,port)))
 
 		'''Add to the message the available nodes #'''	
+		
 		if len(nodesList) == 0:
 			nodesList.append(('msg',0))
 		else:
 			nodesList.insert(0,('msg',len(nodesList)))
 
 		''''Convert data to json format'''	
+		
 		message = json.dumps(dict(nodesList))
-	# elif msg[0] =='3':
+	
+	elif msg[0] =='3':
+		'''This command is for saving a file and inodes in db'''
+		
+		print "Saving filepath and inodes in DB"
+		data = msg[1] # Jason Data
+		
+		print "Message recieved:\n Command: 3 \n Data:%s" %data
+
+		'''Decode the jason string'''
+		data = json.loads(data)
+
+		'''Get the data in the json and format it to query the db'''
+
+		dfsFilepath = data['filepath'][0] #path of the file in the dfs
+		fileSize = int(data['filepath'][1])
+		inodes = []
+		for tl in data['inodes']:
+			node = tl[0]
+			chunkId = int(tl[1])
+			inodes.append((node,chunkId))
+
+
+		print "Recieved\n Filepath: %s,Size: %s \n inodes: %s" %(dfsFilepath,fileSize,inodes) # print data recieved
+		
+		'''Try save the file  in the db with the inodes info'''
+
+		try:
+			db.InsertFile(dfsFilepath,fileSize) #insert file in db
+			db.AddBlockToInode(dfsFilepath,inodes)
+			message = 'True' # message to answer back
+		except 0:
+			print "Can't save the file %s file path exist on db" %dfsFilepath
+			message = 'False'
+
+		'''Test the file and inode info'''
+		if message == 'True':
+			print "Testing retreiving Inode info"
+			fsize, chunks_info = db.GetFileInode(dfsFilepath)
+			print "File Size is:", fsize
+			print "and can be constructed from: "
+			for  node, address, port, chunk in chunks_info:
+				print node, address, port, chunk
+				print
+
+	
+	'''Respond to the recieved connection and close the socket'''	
 	conn.send(message) #Send message	
 	conn.close() #Close connection
 

@@ -30,6 +30,7 @@
 ##############################################################
 '''Copy Command'''
 from mdsConf import * 
+import sys
 
 try:
     arg1 = sys.argv[1]
@@ -71,27 +72,31 @@ if validateIP(arg2.split(':')[0]):
 		raise SystemExit("Can't write a file there are no nodes available")
 
 	print "There are " + str(msg) + " nodes available"
-	'''Split the file in n chunks, n=#nodes'''
-	'''Send chunk n to node n'''
+	
+	'''Split the file in n chunks, n=#nodes
+	   Send chunk n to node n '''
+
 	noOfNodes = msg
-	chunks = makeChunks(comp_filePath,noOfNodes)
+	chunksFiles = makeChunks(comp_filePath,noOfNodes)
+	chunks = chunksFiles[0]
+	fileSize = chunksFiles[1]
+
 	
 	'''Copying chunks to nodes'''
-	result = sendChunks(data,chunks,dfs_filePath)
+	
+	result = sendChunks(data,chunks,dfs_filePath,fileSize)
+	message = '3|'+result # add the command to the jason message
 
 	'''If the function returned False raise error'''
 	
-	# if result == False:
-	# 	raise SystemExit("Failed to copy file to datanodes")
+	if result == False:
+		raise SystemExit("Failed to copy file to datanodes")
 		
 	'''If function was good send message with the jason'''
-
-	# s1 = socket(AF_INET,SOCK_STREAM)    # Create the server socket TCP protocol
-	# s.connect((mds_HOST,mds_PORT))
-	# message = '3|'+result
-	# print "Message to send"
-	# print message
-	# s.send(message)
-	# response = s.recv(1042)
-	# s.close()
-	# print response
+	print "Message to send:\n %s" % message
+	s1 = socket(AF_INET,SOCK_STREAM)    # Create the server socket TCP protocol
+	s1.connect((mds_HOST,mds_PORT))
+	s1.send(message)
+	response = s1.recv(1042)
+	s1.close()
+	print response

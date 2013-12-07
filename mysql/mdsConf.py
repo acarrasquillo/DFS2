@@ -2,7 +2,6 @@ import os
 from socket import *
 from mds_db import *
 import json
-import sys
 
 mds_PORT = 1000
 mds_HOST = "localhost"
@@ -57,11 +56,11 @@ def makeChunks(inputFile,noOfNodes):
 		chunkList.append(chunk_Data)
 		print 'Chunk-->%s' % (chunk_Data)
 	print chunkList		
-	return chunkList
+	return [chunkList,bytes]
 
 
 '''Function to send chunks'''
-def sendChunks(nodes,chunkList,dfs_filePath):
+def sendChunks(nodes,chunkList,dfs_filePath,fileSize):
 
 	'''For each available node send an chunk and recieve the chunk id'''
 	print "Sending Chunks"
@@ -87,9 +86,9 @@ def sendChunks(nodes,chunkList,dfs_filePath):
 		inodes.append((node,chunkId)) #append tuple (node,chunkid) to inode
 		i = i+1
 
-	'''return the filepath,inodes in a jason'''
+	'''return the (filepath,size) and [inodes] in a jason'''
 	result = []
-	result.append(('filepath', dfs_filePath))
+	result.append(('filepath', (dfs_filePath,str(fileSize))))
 	result.append(('inodes',inodes))
 	print result
 	message = json.dumps(dict(result))
