@@ -41,7 +41,10 @@ try:
     os.makedirs(os.path.join(BASE_DIR, path))
     chunkDir = os.path.join(BASE_DIR, path)
 except:
+	chunkDir = os.path.join(BASE_DIR, path)
+
 	pass
+
 
 s = socket(AF_INET,SOCK_STREAM)    # Create the server socket TCP protocol
 s.connect((mds_HOST,mds_PORT))
@@ -56,39 +59,32 @@ s.close()
 print answer
 
 '''Now create a new socket to listen for commands'''
-s = socket(AF_INET,SOCK_STREAM)
-s.bind((HOST,port))
-s.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
-s.listen(1)
+s1 = socket(AF_INET,SOCK_STREAM)
+s1.bind((HOST,port))
+print 'Node binded in(%s,%s)' %(HOST,port)  
+s1.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+s1.listen(1)
 i = 0
 while True:
 	'''Accept connections on node socket'''
-	conn,address = s.accept()
+	conn,address = s1.accept()
 	recievedMsg = conn.recv(1024)
-	msg = recievedMsg.split()
-	
+	msg = recievedMsg.split('|')
+	print "Recieved Message-->%s" %msg
 	if msg[0] == '0': 
-		'''Write into DataChunk'''
+		print os.path.join(chunkDir,'f' + str(i))
 		try:#check if that file exists
-			filename = n + str(i)
-			with open(filename):
-				f=open(filename, 'wb')#if the file exists, open the file
-				filename.write(msg[1])
-				f.close()
-			conn.send(filename)
+			filepath = os.path.join(chunkDir,'n' + str(i))
+			f= open(filepath,'wb')#if the file exists, open the file
+			f.write(msg[1])
+			f.close()
+			conn.send('n' + str(i))
 			i = i+1
-		except IOError: #if file doesn't exist
+		except IOError as error: #if file doesn't exist
+   			print error
    			message = 'None' #data will contain a string explaining that the file doesn't exists
    			conn.send(message)
-   	if msg[0] == '1':
-   		'''Read from DataChunk'''
-   		try:
-   			filename = msg[1]
-   			f = open(filename, 'r')
-   			message = f.read()
-   			conn.send(message)
-   		except IOError: #if file doesn't exist
-   			message = 'None' #data will contain a string explaining that the file doesn't exists
-   			conn.send(message)
+   	# if msg[0] 
+
 	'''Close connection'''
 	conn.close()	
