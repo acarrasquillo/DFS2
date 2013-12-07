@@ -13,7 +13,6 @@ db.Connect()
 s = socket(AF_INET,SOCK_STREAM)    # Create the server socket TCP protocol
 s.bind((mds_HOST,mds_PORT))  # Bind the server on mds_PORT
 s.listen(1) 
-conn,address = s.accept()
 '''Create directory for files in project base path'''
 
 try:
@@ -23,9 +22,12 @@ except OSError as error:
 	pass
 
 while True:
+	'''Accept connections on mds'''
+	conn,address = s.accept()
 	# Accept connections from nodes and clients on socket
 	recievedMsg = conn.recv(1024)
-	msg = recievedMsg.split()
+	msg = recievedMsg.split(' ')
+	print msg
 	# print msg
 	if msg[0]=='0':
 		print "Nodo Reportandose"
@@ -68,4 +70,7 @@ while True:
 		message = json.dumps(dict(nodesList))
 	# elif msg[0] =='3':
 	conn.send(message)
+	'''Close connection'''
+	conn.close()
+	break
 s.close()

@@ -46,17 +46,21 @@ except:
 
 s = socket(AF_INET,SOCK_STREAM)    # Create the server socket TCP protocol
 s.connect((mds_HOST,mds_PORT))
-'''Mensaje'''
+'''Send mensaje of nodereport and wait answer and print it'''
 message = "0 %s %s %s" % (path,HOST,port)
 s.send(message)
 answer = s.recv(1024)
+'''Close Socket'''
 s.close()
-print answer                                                                                                                                                                                                                                                                                           
-
-while True:
-	# Accept connections from nodes and clients on socket
-	conn, addr = s.accept()
-	recievedMsg = conn.recv(1024)
-	print recievedMsg
-
-s.close()
+print answer
+# '''Now create a new socket to listen for commands'''
+# s = socket(AF_INET,SOCK_STREAM)
+# s.bind((HOST,port))
+# s.listen(1)
+# while True:
+# 	'''Accept connections on node socket'''
+# 	conn,address = s.accept()
+# 	recievedMsg = conn.recv(1024)
+# 	print recievedMsg
+# 	'''Close connection'''
+# 	conn.close()
