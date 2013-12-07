@@ -1,8 +1,4 @@
-import os
-from socket import *
-from mds_db import *
-from mdsConf import mds_HOST, mds_PORT, BASE_DIR
-import json
+from mdsConf import *
 
 # Create an object of type mds_db
 db = mds_db()
@@ -66,5 +62,5 @@ while True:
 	# elif msg[0] =='3':
 	conn.send(message) #Send message	
 	conn.close() #Close connection
-	break
+
 s.close() 

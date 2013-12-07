@@ -29,10 +29,7 @@
 # 				python copy <metadata-server-ip-address:path on the DFS> <path of the file> 
 ##############################################################
 '''Copy Command'''
-from socket import *
-from mdsConf import mds_PORT, validateIP
-import json
-import sys
+from mdsConf import * 
 
 try:
     arg1 = sys.argv[1]
@@ -51,8 +48,11 @@ s = socket(AF_INET,SOCK_STREAM)    # Create the server socket TCP protocol
 # If argument 2 is an ip
 # Copy from computer to DFS (write)
 if validateIP(arg2.split(':')[0]):
+	
 	''' Argument 2 is the IP'''
+	
 	''' Make Copy from computer to DFS (write) '''
+	
 	mds_HOST = arg2.split(':')[0] # DFS Host
 	print mds_HOST, mds_PORT
 	s.connect((mds_HOST,mds_PORT))
@@ -60,64 +60,38 @@ if validateIP(arg2.split(':')[0]):
 	comp_filePath = arg1 #Path of the file in the computer
 	message = "2"
 	s.send(message)
-	while True:
-		'''Accept connections from DFS and Nodes on socket'''
-		recievedMsg = s.recv(1024)
-		data = json.loads(recievedMsg)
-		msg = data.pop('msg')
+	
+	'''Accept connections from DFS and Nodes on socket'''
+	recievedMsg = s.recv(1024)
+	data = json.loads(recievedMsg)
+	availNodes = data
+	msg = data.pop('msg')
+	s.close()
+	if msg == 0:
+		raise SystemExit("Can't write a file there are no nodes available")
+
+	print "There are " + str(msg) + " nodes available"
+	'''Split the file in n chunks, n=#nodes'''
+	'''Send chunk n to node n'''
+	noOfNodes = msg
+	chunks = makeChunks(comp_filePath,noOfNodes)
+	
+	'''Copying chunks to nodes'''
+	result = sendChunks(data,chunks,dfs_filePath)
+
+	'''If the function returned False raise error'''
+	
+	# if result == False:
+	# 	raise SystemExit("Failed to copy file to datanodes")
 		
-		if msg == 0:
-			print "Can't write a file there are no nodes available"
-			break
+	'''If function was good send message with the jason'''
 
-		print "There are " + str(msg) + " nodes available"
-		'''Split the file in n chunks, n=#nodes'''
-		'''Send chunk n to node n''' 
-
-
-		'''Copying chunks to nodes'''
-		for node,host_port in data.items():
-			'''Send the chunk to the node'''
-		break
-
-
-
-def makeChunks(inputFile,noOfNodes):
-	'''read the file content '''
-	try:
-		f = open(inputFile, 'rb')
-		data = f.read() # read all the contet pf the file
-		f.close()
-	except IOError as error:
-		raise SystemExit("Error creating chunk directory: " + str(error))
-	bytes = len(data)
-	'''calculate the chunksizes'''
-	chunkSize = bytes/noOfNodes
-	noOfChunks = noOfNodes
-
-	if(bytes%chunkSize):
-		noOfChunks+=1
-
-	print inputFile+','+'chunk,'+str(noOfNodes)+','+str(chunkSize)
-
-	chunkList = []
-	for i in range(0,bytes+1,chunkSize):
-		fn1 = data[i:i] + chunkSize
-		chunkList.append(("chunk%s",fn1)) %i
-
-		j = json.dumps(dict(chunkList))
-
-		return j
-
-# #This function join all the chunks contained in list[]
-# def joinChunks(list):
-
-# 	#Go through all the chunks in list
-# 	for data in list:
-
-		
-# 		#fl is the variable that will contain the joined chunks
-# 		fl=None
-
-# 		#put the ned data at the end of fl
-# 		fl.append(data)
+	# s1 = socket(AF_INET,SOCK_STREAM)    # Create the server socket TCP protocol
+	# s.connect((mds_HOST,mds_PORT))
+	# message = '3|'+result
+	# print "Message to send"
+	# print message
+	# s.send(message)
+	# response = s.recv(1042)
+	# s.close()
+	# print response
