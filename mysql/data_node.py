@@ -68,18 +68,27 @@ while True:
 	msg = recievedMsg.split()
 	
 	if msg[0] == '0': 
+		'''Write into DataChunk'''
 		try:#check if that file exists
 			filename = n + str(i)
 			with open(filename):
 				f=open(filename, 'wb')#if the file exists, open the file
 				filename.write(msg[1])
 				f.close()
-			con.send(filename)
+			conn.send(filename)
 			i = i+1
 		except IOError: #if file doesn't exist
    			message = 'None' #data will contain a string explaining that the file doesn't exists
-   			con.send(filename)
-   	# if msg[0] 
-
+   			conn.send(message)
+   	if msg[0] == '1':
+   		'''Read from DataChunk'''
+   		try:
+   			filename = msg[1]
+   			f = open(filename, 'r')
+   			message = f.read()
+   			conn.send(message)
+   		except IOError: #if file doesn't exist
+   			message = 'None' #data will contain a string explaining that the file doesn't exists
+   			conn.send(message)
 	'''Close connection'''
 	conn.close()	
