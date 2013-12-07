@@ -1,4 +1,3 @@
-
 ##############################################################
 #	DFS
 #	
@@ -46,22 +45,41 @@ except:
 
 s = socket(AF_INET,SOCK_STREAM)    # Create the server socket TCP protocol
 s.connect((mds_HOST,mds_PORT))
+
 '''Send mensaje of nodereport and wait answer and print it'''
 message = "0 %s %s %s" % (path,HOST,port)
 s.send(message)
 answer = s.recv(1024)
+
 '''Close Socket'''
 s.close()
 print answer
-# '''Now create a new socket to listen for commands'''
-# s = socket(AF_INET,SOCK_STREAM)
-# s.bind((HOST,port))
-# s.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
-# s.listen(1)
-# while True:
-# 	'''Accept connections on node socket'''
-# 	conn,address = s.accept()
-# 	recievedMsg = conn.recv(1024)
-# 	print recievedMsg
-# 	'''Close connection'''
-# 	conn.close()
+
+'''Now create a new socket to listen for commands'''
+s = socket(AF_INET,SOCK_STREAM)
+s.bind((HOST,port))
+s.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+s.listen(1)
+i = 0
+while True:
+	'''Accept connections on node socket'''
+	conn,address = s.accept()
+	recievedMsg = conn.recv(1024)
+	msg = recievedMsg.split()
+	
+	if msg[0] == '0': 
+		try:#check if that file exists
+			filename = n + str(i)
+			with open(filename):
+				f=open(filename, 'wb')#if the file exists, open the file
+				filename.write(msg[1])
+				f.close()
+			con.send(filename)
+			i = i+1
+		except IOError: #if file doesn't exist
+   			message = 'None' #data will contain a string explaining that the file doesn't exists
+   			con.send(filename)
+   	# if msg[0] 
+
+	'''Close connection'''
+	conn.close()	
