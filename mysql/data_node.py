@@ -23,10 +23,8 @@
 # 	
 ##############################################################\
 
-from mdsConf import mds_PORT, mds_HOST, BASE_DIR
+from mdsConf import *
 import sys
-import os
-from socket import *
 
 
 HOST = 'localhost'
@@ -50,7 +48,7 @@ s = socket(AF_INET,SOCK_STREAM)    # Create the server socket TCP protocol
 s.connect((mds_HOST,mds_PORT))
 
 '''Send mensaje of nodereport and wait answer and print it'''
-message = "0 %s %s %s" % (path,HOST,port)
+message = "0|%s|%s|%s" % (path,HOST,port)
 s.send(message)
 answer = s.recv(1024)
 
@@ -72,13 +70,13 @@ while True:
 	msg = recievedMsg.split('|')
 	print "Recieved Message-->%s" %msg
 	if msg[0] == '0': 
-		print os.path.join(chunkDir,'f' + str(i))
+		print os.path.join(chunkDir,str(i))
 		try:#check if that file exists
-			filepath = os.path.join(chunkDir,'n' + str(i))
+			filepath = os.path.join(chunkDir,'f' + str(i))
 			f= open(filepath,'wb')#if the file exists, open the file
 			f.write(msg[1])
 			f.close()
-			conn.send('n' + str(i))
+			conn.send(str(i))
 			i = i+1
 		except IOError as error: #if file doesn't exist
    			print error
