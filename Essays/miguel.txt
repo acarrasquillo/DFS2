@@ -1,0 +1,6 @@
+Miguel Alexis Roque:
+	
+Este trabajo ha sido muy fuerte para mi debido a que, de todo el grupo, soy el que menos sabe Python. Por esta razón, Roxana y Abimael me tuvieron que enseñar varias cosas, y por eso estoy muy agradecido con ellos. Por esta razón le doy un 9 de 10 en dificultad. Pero al final, siendo sincero, el resultado fue muy positivo debido a que aprendí UN MONTON: json, dividir files, sockets, e incluso aprendí encripcion utilizando PyCrypto (aunque al final no lo implementamos en el DFS) Lo más difícil para mi fue buscar la manera de entender lo que verdaderamente hace un DFS e implementarlo en Python. Yo quería hacer el trabajo en C++ debido a que es un lenguaje que, obviamente, domino mejor que Python pero ahora es que me doy cuenta que implementar el DFS  en Python es mas llevadero que implementarlo en C++. En conclusion, mi inexperiencia con Python que este trabajo fuera muy dificil, pero después de todas esas amanecidas en Hangouts me ha hecho aprender mucho sobre Python :)
+
+
+	

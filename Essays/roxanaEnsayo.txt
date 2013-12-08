@@ -1,0 +1,7 @@
+﻿Roxana González Burgos
+801 10 2806
+
+
+
+
+Entre las diferentes cosas que aprendí en la tarea, es el cómo se debe organizar un proyecto y llevar las cosas viéndolas de un marco simple para llevarlo a lo poco a poco a lo complicado, ya que una vez se ven las complicadas, hay una tendencia a pasar más dificultad de lo normal. Por lo que, para tan solo empezar a desarrollar la tarea, tome como requisito propio estudiar las instrucciones, separar tareas y llevarlas a su simplicidad, para que al delegar los trabajos sean más fáciles y rápidas de hacer. Durante el proyecto trabajé con Abimael Carrasquillo y Miguel Roque, donde para llevar armonía entre el código utilizamos las herramientas que provee git a través de github, en adición a 'version control' que este ofrece. Si voy a evaluar en términos de dificultad, pondría un 6, dado a que se debe entender la asignación[HIGH PRIORITY], y lo que se está desarrollando[i.e. un File System], ya que con conocimientos básicos programación, específicamente en python y con la ayuda de Google, la parte técnica es relativamente sencilla. Vale recalcar también que es un proyecto con muchas especificaciones y debe ser desarrollado los diferentes archivos simultaneamente, pues para hacer pruebas unos archivos dependen de otros.
