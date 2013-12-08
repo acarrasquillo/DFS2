@@ -121,13 +121,13 @@ while True:
 		try:
 			db.InsertFile(dfsFilepath,fileSize) #insert file in db
 			db.AddBlockToInode(dfsFilepath,inodes)
-			message = 'True' # message to answer back
+			message = 'Filepath and inodes saved in MDS' # message to answer back
 		except 0:
 			print "Can't save the file %s file path exist on db" %dfsFilepath
 			message = 'False'
 
 		'''Test the file and inode info'''
-		if message == 'True':
+		if message != 'False':
 			
 			print "Testing retreiving Inode info"
 			
