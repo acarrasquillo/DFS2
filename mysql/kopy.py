@@ -42,20 +42,19 @@ except:
     					 + "Copy from DFS to computer:\n"
     					 + "python copy <metadata-server-ip-address:path on the DFS> <path of the file>"
     					 )
-# If argument 1 is an ip
-# Copy from DFS to computer (read)
-s = socket(AF_INET,SOCK_STREAM)    # Create the server socket TCP protocol
 
-# If argument 2 is an ip
-# Copy from computer to DFS (write)
+'''If argument 2 is an ip
+   Copy from computer to DFS (write)'''
+
 if validateIP(arg2.split(':')[0]):
 	
-	''' Argument 2 is the IP'''
-	
-	''' Make Copy from computer to DFS (write) '''
-	
+	''' Argument 2 is the IP
+	    Make Copy from computer to DFS (write) '''
+
 	mds_HOST = arg2.split(':')[0] # DFS Host
-	print mds_HOST, mds_PORT
+	
+
+	s = socket(AF_INET,SOCK_STREAM)    # Create the server socket TCP protocol
 	s.connect((mds_HOST,mds_PORT))
 	dfs_filePath = arg2.split(':')[1] # Path of the file in the dfs
 	comp_filePath = arg1 #Path of the file in the computer
@@ -63,6 +62,7 @@ if validateIP(arg2.split(':')[0]):
 	s.send(message)
 	
 	'''Accept connections from DFS and Nodes on socket'''
+	
 	recievedMsg = s.recv(1024)
 	data = json.loads(recievedMsg)
 	availNodes = data
@@ -100,3 +100,46 @@ if validateIP(arg2.split(':')[0]):
 	response = s1.recv(1042)
 	s1.close()
 	print response
+
+
+elif validateIP(arg1.split(':')[0]):
+	# If argument 2 is an ip
+	dfs_filePath = arg1.split(':')[1] # Path of the file in the dfs
+	mds_HOST = arg1.split(':')[0]
+	# Copy from DFS to computer (read)
+	print 'Command is a  read'
+
+	'''Create socket to comunicate with Meta Data Server'''
+	
+	s = socket(AF_INET,SOCK_STREAM)    # Create the server socket TCP protocol
+	s.connect((mds_HOST,mds_PORT)) # connect MDS
+
+	'''Message the metadata the filepath on the dfs'''
+
+	comp_filePath = arg2 #Path of the file in the computer
+	message = "4|%s" %dfs_filePath
+	s.send(message)
+
+	'''Recieve the response from the MDS'''
+
+	recievedMsg = s.recv(1024)
+	s.close()
+	
+	if recievedMsg == 'False':
+		pass
+
+	else:
+		'''Unpack the inodes from the json'''
+		inodes = json.loads(recievedMsg)
+
+		'''Get the chunk from each node'''
+		print "Inodes info"
+		for node,info in inodes.items():
+			host,port,chunkid = info[0],info[1],info[2]
+
+			print "%s: Host-> %s Port-> %s Chunkid-> %s" %(node,host,port,chunkid)
+
+
+
+
+

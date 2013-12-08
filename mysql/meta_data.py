@@ -140,6 +140,40 @@ while True:
 			for  node, address, port, chunk in chunks_info:
 				print node, address, port, chunk
 
+	elif msg[0] == '4':
+
+		dfs_filepath = msg[1] # get the dsf file path
+
+		try:
+			fileid, fsize = db.GetFileInfo(dfs_filepath)
+		except:
+			fileid = None 
+
+		if fileid == None:
+		 	print 'File doesn\'t exists in the DFS'
+		 	message = 'False'
+
+		else :
+			'''Send the file inodes to the client'''
+			inode = []
+
+			print "Testing retreiving Inode info"
+			
+			fsize, chunks_info = db.GetFileInode(dfs_filepath)
+			
+			print "File Size is:", fsize
+			
+			print "and can be constructed from: "
+			
+			for  node, address, port, chunk in chunks_info:
+				print node, address, port, chunk
+				k,v = node,(address,port,chunk)
+				inode.append((k,v))
+				data = json.dumps(dict(inode))
+				message = data
+
+
+
 	
 	'''Respond to the recieved connection and close the socket'''	
 	conn.send(message) #Send message	
