@@ -82,7 +82,16 @@ while True:
    			print error
    			message = 'None' #data will contain a string explaining that the file doesn't exists
    			conn.send(message)
-   	# if msg[0] 
+
+   			#for reading 
+
+   	 if msg[1]:
+   	 	filepath = os.path.join(chunkDir,'f' + str(i))
+   	 	f= open(filepath,'rb')
+   	 	data= f.read()
+   	 	f.close()
+   	 	conn.send(data)
+
 
 	'''Close connection'''
 	conn.close()	

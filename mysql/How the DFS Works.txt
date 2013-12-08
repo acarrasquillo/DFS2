@@ -1,0 +1,27 @@
+How The DFS Works:
+
+To start the DFS, we must first run the metadata server:
+
+sudo python meta_data.py
+
+After that, we procede to create as many data nodes as necessary:
+
+sudo python data_node.py  <PortNumber >  <DirectoryName>
+
+*BE SURE TO NOT USE THE SAME PORT NUMBER WHEN CREATING DATA NODES. 
+*If the DirectoryName doesn’t exist, the Data Node creates it
+
+After running the metadata server and creating some data nodes, we are ready to send files to the DFS.
+
+To write a file to the DFS use this command:
+
+python kopy.py <Path Of The File> <Metadata-Server-IP-Address:Path On The DFS> 
+
+*If the file doesn't exist, an error is displayed
+
+To read a file from the DFS use this command:
+
+python kopy.py <Metadata-Server-IP-Address:Path On The DFS> <Path Of The File>
+
+*If the file doesn't exist on the DFS, an error is displayed
+

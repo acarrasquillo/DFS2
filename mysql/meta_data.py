@@ -145,4 +145,29 @@ while True:
 	conn.send(message) #Send message	
 	conn.close() #Close connection
 
+#Read command
+
+elif msg[0]= '4' :
+	 '''This command is for reading a file'''
+
+	 fileid, fsize = db.GetFileInfo(msg[1])
+
+	 if fileid == None:
+	 	print 'File doesn\'t exists in the database'
+
+	 else :
+	 	fsize,chunks = db.GetFileInode(msg[1])
+	 	readFile = ''
+	 	for  node, address, port, chunk in chunks:
+
+	 		message=0
+	 		
+
+	 		#conectarse a cada nodo y que cada nodo le envie su chunk.
+	 		#los chunks se guardan en el string, osea se le hace append, o se puede usar una lista
+
+	 		message = json.dumps(readFile)
+
+
+
 s.close() 
