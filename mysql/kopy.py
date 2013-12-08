@@ -93,7 +93,6 @@ if validateIP(arg2.split(':')[0]):
 		raise SystemExit("Failed to copy file to datanodes")
 		
 	'''If function was good send message with the jason'''
-	print "Message to send:\n %s" % message
 	s1 = socket(AF_INET,SOCK_STREAM)    # Create the server socket TCP protocol
 	s1.connect((mds_HOST,mds_PORT))
 	s1.send(message)
@@ -131,6 +130,7 @@ elif validateIP(arg1.split(':')[0]):
 	else:
 		'''Unpack the inodes from the json'''
 		inodes = json.loads(recievedMsg)
+		data = '' # string to save the file  
 
 		'''Get the chunk from each node'''
 		print "Inodes info"
@@ -139,7 +139,37 @@ elif validateIP(arg1.split(':')[0]):
 
 			print "%s: Host-> %s Port-> %s Chunkid-> %s" %(node,host,port,chunkid)
 
+			'''Create the socket to connect with node '''
+			
+			s = socket(AF_INET,SOCK_STREAM)    # Create the server socket TCP protocol
+			s.connect((host,port)) # connect node
+			s.send("1|%s" %chunkid)
+			recievedMsg = s.recv(1024)
+			data = data + recievedMsg
+
+			#print 'Writed from node %s: \n Chunk%s-> %s' %(node,chunkid,recievedMsg)
+
+		'''Open a file and write the data'''
+		try:
+			f= open(comp_filePath,'wb')#if the file exists, open the file
+			f.write(data)
+			f.close()
+		except IOError as error: #if error
+   			print error
+
+   		'''Read the data written in the file'''
+   		try:
+	   		f= open(comp_filePath,'rb')
+	   		read = f.read()
+	   		f.close()
+	   		'''Print the data'''
+	   		print "File: %s \n%s" %(comp_filePath,read)
+	   	except IOError as error:
+	   		print error
 
 
+
+
+			
 
 

@@ -33,29 +33,33 @@ def makeChunks(inputFile,noOfNodes):
 	try:
 		f = open(inputFile, 'rb')
 		data = f.read() # read all the contet pf the file
-		print data
 		f.close()
 	except IOError as error:
 		print "Error opening the file" + str(error)
 		return False
 	bytes = len(data)
-	print 'Data size-->%s' %bytes
 	'''calculate the chunksizes'''
 	chunkSize = bytes/noOfNodes
 	noOfChunks = noOfNodes
-
 	print "There are %s chunks of sizes %s and there are %s nods available" %(noOfChunks,chunkSize,noOfNodes)
 
-	if(bytes%chunkSize):
-		noOfChunks = noOfChunks + 1
-	print noOfChunks
-
 	chunkList = []
+	k = 1
 	for i in range(0,bytes,chunkSize):
-		chunk_Data = data[i:i+chunkSize]
-		chunkList.append(chunk_Data)
-		print 'Chunk-->%s' % (chunk_Data)
-	print chunkList		
+
+		if k == noOfNodes and (bytes%chunkSize) !=0:
+			print "We needed to add %s bytes in the last chunk to complete the file" %(bytes%chunkSize)
+			chunk_Data = data[i:i+chunkSize+(bytes%chunkSize)]
+			chunkList.append(chunk_Data)
+
+		else:	
+			chunk_Data = data[i:i+chunkSize]
+			chunkList.append(chunk_Data)
+
+		if k == noOfNodes:
+			break
+
+		k = k + 1			
 	return [chunkList,bytes]
 
 
@@ -71,14 +75,11 @@ def sendChunks(nodes,chunkList,dfs_filePath,fileSize):
 		'''Create a tcp socket and connect with the node'''
 		nodeAddress = ((info[0],info[1])) #node adress to send a chunk (HOST,PORT)
 		sock = socket(AF_INET,SOCK_STREAM)    # Create the server socket TCP protocol
-		print nodeAddress
 		sock.connect(nodeAddress) #connect with node
 		data =  "0|"+chunkList[i]
-		print data
 		sock.send(data)# Send chunk[i]
-		print "Sending to %s  chunk-> %s" % (nodeAddress,chunkList[i])
+		print "Sending chunk to %s (host:%s,port:%s)" %(node,nodeAddress[0],nodeAddress[1])
 		chunkId = sock.recv(1024)# recieve chunk id
-		print "The node responded %s" %chunkId
 		if chunkId == 'None':
 			return False
 			break
@@ -90,7 +91,5 @@ def sendChunks(nodes,chunkList,dfs_filePath,fileSize):
 	result = []
 	result.append(('filepath', (dfs_filePath,str(fileSize))))
 	result.append(('inodes',inodes))
-	print result
 	message = json.dumps(dict(result))
-	print "Resul in jason-->%s" %message
 	return message
