@@ -70,9 +70,8 @@ while True:
 	msg = recievedMsg.split('|')
 	print "Recieved Message-->%s" %msg
 	if msg[0] == '0': 
-		print os.path.join(chunkDir,str(i))
 		try:#check if that file exists
-			filepath = os.path.join(chunkDir,'f' + str(i))
+			filepath = os.path.join(chunkDir, str(i))
 			f= open(filepath,'wb')#if the file exists, open the file
 			f.write(msg[1])
 			f.close()
@@ -82,7 +81,16 @@ while True:
    			print error
    			message = 'None' #data will contain a string explaining that the file doesn't exists
    			conn.send(message)
-   	# if msg[0] 
-
+   	if msg[0] == '1':
+   		try:
+	   		filepath = os.path.join(chunkDir, msg[1])
+	   		f= open(filepath,'rb')
+	   		data = f.read()
+	   		f.close()
+	   		conn.send(data)
+	   	except:
+	   		print error
+   			message = 'None' #data will contain a string explaining that the file doesn't exists
+   			conn.send(message)
 	'''Close connection'''
 	conn.close()	
