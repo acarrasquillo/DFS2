@@ -1,0 +1,33 @@
+How the DFS Works:
+
+Start MySQL database:
+
+mysql.server start
+
+Then you must run the metadata server:
+ 
+sudo python meta_data.py
+
+After that, you can create as many nodes as desired:
+
+python data_node <PortNumber> <Path>
+
+*DON’T REPEAT PORT NUMBERS
+*If the DirectoryName doesn’t exist, the Data Node creates it
+
+You’re ready to transfer files to the DFS:
+
+To write files to the DFS use this command:
+
+python kopy.py <Path Of The File> <Metadata-Server-IP-Address:Path On The DFS> 
+
+*If the file doesn't exist, an error is displayed
+
+To read a file from the DFS use this command:
+
+python kopy.py <Metadata-Server-IP-Address:Path On The DFS> <Path Of The File>
+
+*If the file doesn't exist on the DFS, an error is displayed
+
+
+

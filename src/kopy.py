@@ -143,29 +143,33 @@ elif validateIP(arg1.split(':')[0]):
 			
 			s = socket(AF_INET,SOCK_STREAM)    # Create the server socket TCP protocol
 			s.connect((host,port)) # connect node
-			s.send("1|%s" %chunkid)
-			recievedMsg = s.recv(1024)
-			data = data + recievedMsg
+			s.send("1|%s" %chunkid) # ask for a chunk
+			chunksize = s.recv(1024) #recieve the chunk size
+			print "This is the chunksize message: %s" %chunksize
+			s.send('Chunk size recieved')
+			chunksize = int(chunksize)
+			chunk = s.recv(chunksize+1)#recieve the chunk
+			data = data + chunk
 
 			#print 'Writed from node %s: \n Chunk%s-> %s' %(node,chunkid,recievedMsg)
 
 		'''Open a file and write the data'''
 		try:
-			f= open(comp_filePath,'wb')#if the file exists, open the file
+			f= open(comp_filePath,'w')#if the file exists, open the file
 			f.write(data)
 			f.close()
 		except IOError as error: #if error
    			print error
 
-   		'''Read the data written in the file'''
-   		try:
-	   		f= open(comp_filePath,'rb')
-	   		read = f.read()
-	   		f.close()
-	   		'''Print the data'''
-	   		print "File: %s \n%s" %(comp_filePath,read)
-	   	except IOError as error:
-	   		print error
+   		# '''Read the data written in the file'''
+   		# try:
+	   	# 	f= open(comp_filePath,'rb')
+	   	# 	read = f.read()
+	   	# 	f.close()
+	   	# 	'''Print the data'''
+	   	# 	print "File: %s \n%s" %(comp_filePath,read)
+	   	# except IOError as error:
+	   	# 	print error
 
 
 

@@ -62,18 +62,34 @@ s1.bind((HOST,port))
 print 'Node binded in(%s,%s)' %(HOST,port)  
 s1.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
 s1.listen(1)
-i = 0
+i = 0 #counter for the chunks ids
 while True:
+	
 	'''Accept connections on node socket'''
+	
 	conn,address = s1.accept()
 	recievedMsg = conn.recv(1024)
 	msg = recievedMsg.split('|')
+	
 	print "Recieved Message-->%s" %msg
+
+	'''If command is 0 write chunk'''
+	
 	if msg[0] == '0': 
+
+		'''Get the chunk size'''
+		chunk_size = int(msg[1])
+		print "Chunk size is %s" %chunk_size
+		conn.send('Size Recieved')
+		
+		'''Recieve the chunk'''
+		chunk = conn.recv(chunk_size)
+		# print "Recieved chunk:\n%s" %chunk
+
 		try:#check if that file exists
 			filepath = os.path.join(chunkDir, str(i))
-			f= open(filepath,'wb')#if the file exists, open the file
-			f.write(msg[1])
+			f= open(filepath,'w')#if the file exists, open the file
+			f.write(chunk)
 			f.close()
 			conn.send(str(i))
 			i = i+1
@@ -81,14 +97,19 @@ while True:
    			print error
    			message = 'None' #data will contain a string explaining that the file doesn't exists
    			conn.send(message)
+   	
    	if msg[0] == '1':
    		try:
 	   		filepath = os.path.join(chunkDir, msg[1])
-	   		f= open(filepath,'rb')
+	   		f= open(filepath,'r')
 	   		data = f.read()
 	   		f.close()
-	   		conn.send(data)
-	   	except:
+	   		datasize = str(len(data)+1)
+	   		print "Sending chunk size %s" %datasize
+	   		conn.send(datasize)
+	   		print conn.recv(1024) #Print kopy response
+	   		conn.send(data) #send the chunk
+	   	except IOError as error:
 	   		print error
    			message = 'None' #data will contain a string explaining that the file doesn't exists
    			conn.send(message)
