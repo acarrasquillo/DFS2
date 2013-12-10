@@ -19,6 +19,9 @@ s.send(message)
 recievedMsg = s.recv(1024)
 '''Close Socket'''
 s.close()
-d = json.loads(recievedMsg)
-for i in d:
-	print i['File'] + " " + i['Size'] 
+try: 
+	d = json.loads(recievedMsg)
+	for i in d:
+		print i['File'] + " " + i['Size'] 
+except:
+	print "There are no files in the database"

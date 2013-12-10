@@ -42,7 +42,7 @@ while True:
 	# Accept connections from nodes and clients on socket
 	recievedMsg = conn.recv(1024)
 	msg = recievedMsg.split('|')
-	print msg
+	#print msg
 	# print msg
 	
 	if msg[0]=='0':
@@ -63,7 +63,7 @@ while True:
 
 		message = '['
 		#gather all the files and their size and display them
-		print db.GetFiles()
+		#print db.GetFiles()
 		for data in db.GetFiles():
 			message = message + '{ "File":"' + data[0]+'", "Size":"'+str(data[1])+'"},'
 		message = message[0:len(message)-1] +']'
@@ -95,10 +95,10 @@ while True:
 	elif msg[0] =='3':
 		'''This command is for saving a file and inodes in db'''
 		
-		print "Saving filepath and inodes in DB"
+		print "Attempting filepath and inodes in DB"
 		data = msg[1] # Jason Data
 		
-		print "Message recieved:\n Command: 3 \n Data:%s" %data
+		#print "Message recieved:\n Command: 3 \n Data:%s" %data
 
 		'''Decode the jason string'''
 		data = json.loads(data)
@@ -118,13 +118,26 @@ while True:
 		
 		'''Try save the file  in the db with the inodes info'''
 
-		try:
-			db.InsertFile(dfsFilepath,fileSize) #insert file in db
-			db.AddBlockToInode(dfsFilepath,inodes)
-			message = 'Filepath and inodes saved in MDS' # message to answer back
-		except 0:
-			print "Can't save the file %s file path exist on db" %dfsFilepath
-			message = 'False'
+		filelist = db.GetFiles()
+
+
+		for files in filelist:
+			if dfsFilepath == files[0]:
+				print "Can't save the file %s file path exist on db" %dfsFilepath
+				message = 'False'
+
+			else:
+				message = 'True'
+
+		if message == 'True':
+
+			try:
+				db.InsertFile(dfsFilepath,fileSize) #insert file in db
+				db.AddBlockToInode(dfsFilepath,inodes)
+				message = 'Filepath and inodes saved in MDS' # message to answer back
+			except 0:
+				print "Can't save the file %s file path exist on db" %dfsFilepath
+				message = 'False'
 
 		'''Test the file and inode info'''
 		if message != 'False':
