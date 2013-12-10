@@ -60,3 +60,7 @@ README
    - Run in a terminal `python data_node.py <port> <name-of-chunk-directory>`
    - Note: The server must be running to recieve the node. 
 
+# Tech stack
+* Abimael Carrasquillo
+* Roxana González
+* Miguel Roque
