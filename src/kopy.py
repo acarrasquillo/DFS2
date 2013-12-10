@@ -155,13 +155,15 @@ elif validateIP(arg1.split(':')[0]):
 
 			#print 'Writed from node %s: \n Chunk%s-> %s' %(node,chunkid,recievedMsg)
 
-		'''Open a file and write the data'''
-		try:
-			f= open(comp_filePath,'a+b')#if the file exists, open the file
-			f.write(data)
-			f.close()
-		except IOError as error: #if error
-   			print error
+			'''Open a file and write the data'''
+
+			print "Writing %s bytes in file:" %len(data) 
+			try:
+				f= open(comp_filePath,'a+b')#if the file exists, open the file
+				f.write(data)
+				f.close()
+			except IOError as error: #if error
+	   			print error
 
    		'''Read the data written in the file'''
 	try:
