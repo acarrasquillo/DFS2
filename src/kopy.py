@@ -148,28 +148,30 @@ elif validateIP(arg1.split(':')[0]):
 			print "This is the chunksize message: %s" %chunksize
 			s.send('Chunk size recieved')
 			chunksize = int(chunksize)
-			chunk = s.recv(chunksize+1)#recieve the chunk
-			data = data + chunk
+			data = ''
+			while len(data) < chunksize:
+				print len(data)
+				data+= s.recv(chunksize - len(data))#recieve the chunk
 
 			#print 'Writed from node %s: \n Chunk%s-> %s' %(node,chunkid,recievedMsg)
 
 		'''Open a file and write the data'''
 		try:
-			f= open(comp_filePath,'w')#if the file exists, open the file
+			f= open(comp_filePath,'a+b')#if the file exists, open the file
 			f.write(data)
 			f.close()
 		except IOError as error: #if error
    			print error
 
-   		# '''Read the data written in the file'''
-   		# try:
-	   	# 	f= open(comp_filePath,'rb')
-	   	# 	read = f.read()
-	   	# 	f.close()
-	   	# 	'''Print the data'''
-	   	# 	print "File: %s \n%s" %(comp_filePath,read)
-	   	# except IOError as error:
-	   	# 	print error
+   		'''Read the data written in the file'''
+	try:
+		f= open(comp_filePath,'rb')
+		read = f.read()
+		f.close()
+		'''Print the data'''
+		print "File size is: %s" %len(read)
+	except IOError as error:
+		print error
 
 
 

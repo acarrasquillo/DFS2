@@ -31,13 +31,14 @@ def makeChunks(inputFile,noOfNodes):
 	
 	'''read the file content '''
 	try:
-		f = open(inputFile, 'r')
+		f = open(inputFile, 'rb')
 		data = f.read() # read all the contet pf the file
 		f.close()
 	except IOError as error:
 		print "Error opening the file" + str(error)
 		return False
 	bytes = len(data)
+	print "The size of the file is %s" %bytes
 	'''calculate the chunksizes'''
 	chunkSize = bytes/noOfNodes
 	chunkList = []
@@ -47,6 +48,7 @@ def makeChunks(inputFile,noOfNodes):
 		if k == noOfNodes:
 			chunk_Data = data[i:]
 			chunkList.append(chunk_Data)
+			print "Chunk %s is of size %s:" %(k,len(chunk_Data))
 			break
 
 		else:	
@@ -71,10 +73,11 @@ def sendChunks(nodes,chunkList,dfs_filePath,fileSize):
 		sock = socket(AF_INET,SOCK_STREAM)    # Create the server socket TCP protocol
 		sock.connect(nodeAddress) #connect with node
 		chunksize = str(len(chunkList[i]))
+		print "The chunksize is: %s" %chunksize 
 		data =  "0|"+chunksize
-		sock.send(data)# Send chunk[i] size and command 0
+		sock.sendall(data)# Send chunk[i] size and command 0
 		print sock.recv(1024) #print sock answer
-		sock.send(chunkList[i]) # send the chunk i on the list
+		sock.sendall(chunkList[i]) # send the chunk i on the list
 		print "Sending chunk to %s (host:%s,port:%s)" %(node,nodeAddress[0],nodeAddress[1])
 		chunkId = sock.recv(1024)# recieve chunk id
 		print "Chunk recieved by the node and has id-> %s" %chunkId

@@ -176,7 +176,7 @@ while True:
 
 	
 	'''Respond to the recieved connection and close the socket'''	
-	conn.send(message) #Send message	
+	conn.sendall(message) #Send message	
 	conn.close() #Close connection
 
 s.close() 

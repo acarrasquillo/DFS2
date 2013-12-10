@@ -83,32 +83,34 @@ while True:
 		conn.send('Size Recieved')
 		
 		'''Recieve the chunk'''
-		chunk = conn.recv(chunk_size)
-		# print "Recieved chunk:\n%s" %chunk
+		chunk = ''
+		while len(chunk) < chunk_size:
+			chunk+= conn.recv(chunk_size - len(chunk))
+		print "Recieved size is chunk:\n%s" %len(chunk)
 
 		try:#check if that file exists
 			filepath = os.path.join(chunkDir, str(i))
-			f= open(filepath,'w')#if the file exists, open the file
+			f= open(filepath,'wb')#if the file exists, open the file
 			f.write(chunk)
 			f.close()
-			conn.send(str(i))
+			conn.sendall(str(i))
 			i = i+1
 		except IOError as error: #if file doesn't exist
    			print error
    			message = 'None' #data will contain a string explaining that the file doesn't exists
-   			conn.send(message)
+   			conn.sendall(message)
    	
    	if msg[0] == '1':
    		try:
 	   		filepath = os.path.join(chunkDir, msg[1])
-	   		f= open(filepath,'r')
+	   		f= open(filepath,'rb')
 	   		data = f.read()
 	   		f.close()
-	   		datasize = str(len(data)+1)
+	   		datasize = str(len(data))
 	   		print "Sending chunk size %s" %datasize
-	   		conn.send(datasize)
+	   		conn.sendall(datasize)
 	   		print conn.recv(1024) #Print kopy response
-	   		conn.send(data) #send the chunk
+	   		conn.sendall(data) #send the chunk
 	   	except IOError as error:
 	   		print error
    			message = 'None' #data will contain a string explaining that the file doesn't exists
