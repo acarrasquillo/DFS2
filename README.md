@@ -35,10 +35,10 @@ README
 
 * This file represents the Server. If first connect to the database and then wait for instructions. If the server recieve:
 
-  * List       : Rerurn all the files and their size showed in the database.
+  * List       : Return all the files and their size showed in the database.
   * Node Report: If a node report, it's inserted in the database and then returns a message of succesfull or fail.
   * Read       : The server looks for the file in the database. If exists the database returns all the information about that file. If not it's notified to the user.
-  * Write      : Once recieve a write, the server divides it between the nodes and then send each chunk to a different node.
+  * Write      : Once recieve a write, the server divides it between the nodes and then send each chunk to a different node if the write is from the computer to the DFS and if the write is from the DFS to the computer then it makes a join of all the divitions described above.
  
 * How to run it?
 

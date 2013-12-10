@@ -120,27 +120,30 @@ while True:
 
 		filelist = db.GetFiles()
 
+		if len(filelist) ==0:
+			message = 'True'
+			db.InsertFile(dfsFilepath,fileSize) #insert file in db
+			db.AddBlockToInode(dfsFilepath,inodes)
+			message = 'Filepath and inodes saved in MDS' # message to answer back
 
-		for files in filelist:
-			if dfsFilepath == files[0]:
-				print "Can't save the file %s file path exist on db" %dfsFilepath
-				message = 'False'
+		else:
 
-			else:
-				message = 'True'
+			for files in filelist:
+				print files[0]
+				print dfsFilepath
+				
+				if dfsFilepath == files[0]:
+					print "Can't save the file %s file path exist on db" %dfsFilepath
+					message = 'False'
 
-		if message == 'True':
-
-			try:
-				db.InsertFile(dfsFilepath,fileSize) #insert file in db
-				db.AddBlockToInode(dfsFilepath,inodes)
-				message = 'Filepath and inodes saved in MDS' # message to answer back
-			except 0:
-				print "Can't save the file %s file path exist on db" %dfsFilepath
-				message = 'False'
+				else:
+					message = 'True'
+					db.InsertFile(dfsFilepath,fileSize) #insert file in db
+					db.AddBlockToInode(dfsFilepath,inodes)
+					message = 'Filepath and inodes saved in MDS' # message to answer back
 
 		'''Test the file and inode info'''
-		if message != 'False':
+		if message == 'True':
 			
 			print "Testing retreiving Inode info"
 			

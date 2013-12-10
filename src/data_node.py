@@ -38,8 +38,10 @@ except:
 try:
     os.makedirs(os.path.join(BASE_DIR, path))
     chunkDir = os.path.join(BASE_DIR, path)
+    i = 0
 except:
 	chunkDir = os.path.join(BASE_DIR, path)
+	i = len(os.listdir(chunkDir))
 
 	pass
 
@@ -62,7 +64,6 @@ s1.bind((HOST,port))
 print 'Node binded in(%s,%s)' %(HOST,port)  
 s1.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
 s1.listen(1)
-i = 0 #counter for the chunks ids
 while True:
 	
 	'''Accept connections on node socket'''
