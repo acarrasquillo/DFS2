@@ -4,9 +4,8 @@ README
 
 * [Tech Stack](#tech-stack)
 * [Development setup](#development-setup)
-* [Environment variables](#environment-variables)
+* [Files Included](#files-included)
 * [Contributing](#contributing)
-* [TODO](#todo)
 * [Team](#team)
 * [Help](#help)
 
@@ -27,34 +26,32 @@ README
 4. Create the database with `CREATE DATABASE ccom4017_dfs_ram;`
 5. Exit from mysql with the Crtl+D command
 6. Go to the file `mds_db.py` and make shure that the `DB_USER` and the `DB_PASS` are the same as the one you setted up in step 2.
+7. If the server will run in an external IP Address, make shure that the server point to the database, go to the `mdsConfig.py` and change the variables `mds_PORT` and `mds_HOST` to the ones desired.
 7. Verify that in `db.sql` the first line have the following `use ccom4017_dfs_ram ;` wich is the database created in step 4.
 7. Create the tables with `mysql -u ram -p < db.sql`.
 8. Run `python test.py` to make shure everything in running normal.
 
-# Files Invcluded
-0. Data Nodes (data_node.py): 
-  0.1
-Este file representa los “data nodes”. Primero se crea un directorio en el que se guardarán los “chunks” y después los “data nodes” se reportan al metadata server a través de un socket. Luego los “data nodes” se quedan esperando hasta que reciban instrucciones. Una vez se recibe una instrucción(read o write) el data node hace lo siguiente:
 
--Si es read:
-el datanode simplemente copia el contenido del file en una variable y envia esa variable a la misma dirección donde se recibió la instrucción.
--Si es write:
-el datanode guarda el string que recibió a traves del socket en un file en el directorio del nodo.
+# Files Included
+0. Metadata Server (meta_data.py):
+ * This file represents the Server. If first connect to the database and then wait for instructions. If the server recieve:
+  * List       : Rerurn all the files and their size showed in the database.
+  * Node Report: If a node report, it's inserted in the database and then returns a message of succesfull or fail.
+  * Read       : The server looks for the file in the database. If exists the database returns all the information about that file. If not it's notified to the user.
+  * Write      : Once recieve a write, the server divides it between the nodes and then send each chunk to a different node.
+ * How to run it?
+  *  The server is run with the following command: `sudo python meta_data.py` (Sudo because of the sockets permissions)
+  *  The list command: `python list.py <meta-data-server-ip-address>`
+  *  The node report : `python data_node.py <port> <name-of-chunk-directory>`
+  *  Write and read are used by the `kopy.py` command:
+   * Copy from computer to DFS: `python copy <path of the file> <metadata-server-ip-address:path on the DFS>`
+   * Copy from DFS to computer: `python copy <metadata-server-ip-address:path on the DFS> <path of the file>`
+ 
+1. Data Nodes (data_node.py): 
+ * This file represents the data nodes. Once created, a Folder is created to store the 'chunks', the the data node is reported to the server, notifying that it's available. Then the data node it's constantly receiving server orders.
+  * Read : The data-node copies the content of a file and save it in the corresponded file indicated in the call.
+  * Write: The data-node stores the data recieved from the server in the node's directory.
+ * How to run it?
+  * Run in a terminal `python data_node.py <port> <name-of-chunk-directory>`
+  * Note: The server must be running to recieve the node. 
 
-Metadata Server (meta_data.py):
-
-Este file representa el Metadata Server. El metadata primero se conecta a la base de datos y luego se queda esperando a recibir instrucciones a través de sockets. Una vez se recibe una instrucción(reporte de nodos, list, read,write) el metadata server hace lo siguiente:
-
--Si es reporte de nodos:
-El metadata añade el nodo a la base de datos y luego verifica y reporta al usuario si el nodo fue insertado exitosamente
-
--Si es list:
-El metadata le pide a la base de datos que le brinde toda su información(nombre de los files y su tamaño respectivamente) y luego se los desplega al usuario.
-
--Si es read:
-El metadata verifica si el file se encuentra en la base de datos.
-Si el file se encuentra en la base de datos, el meta data le pide a la base de datos que le brinde toda la información de ese file(el nombre del file, tamaño,los id de los nodos, etc.) y se las desplega al usuario.
-Si el file no existe, el metadata simplemente le deja saber al usuario que el file no se encuentra en la base de datos.
-
--Si es write:
-El metadata se encarga de dividir el file entre los nodos disponibles para luego enviar cada chunk a un nodo diferente(esto se hace a traves del “cliente” kopy.py)
