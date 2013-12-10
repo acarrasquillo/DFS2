@@ -33,14 +33,14 @@ README
 # Files Included
 0. Metadata Server (meta_data.py):
 
-This file represents the Server. If first connect to the database and then wait for instructions. If the server recieve:
+*This file represents the Server. If first connect to the database and then wait for instructions. If the server recieve:
 
   * List       : Rerurn all the files and their size showed in the database.
   * Node Report: If a node report, it's inserted in the database and then returns a message of succesfull or fail.
   * Read       : The server looks for the file in the database. If exists the database returns all the information about that file. If not it's notified to the user.
   * Write      : Once recieve a write, the server divides it between the nodes and then send each chunk to a different node.
  
-How to run it?
+*How to run it?
 
   *  The server is run with the following command: `sudo python meta_data.py` (Sudo because of the sockets permissions)
   *  The list command: `python list.py <meta-data-server-ip-address>`
@@ -51,12 +51,12 @@ How to run it?
  
 1. Data Nodes (data_node.py): 
 
-This file represents the data nodes. Once created, a Folder is created to store the 'chunks', the the data node is reported to the server, notifying that it's available. Then the data node it's constantly receiving server orders.
+*This file represents the data nodes. Once created, a Folder is created to store the 'chunks', the the data node is reported to the server, notifying that it's available. Then the data node it's constantly receiving server orders.
 
   * Read : The data-node copies the content of a file and save it in the corresponded file indicated in the call.
   * Write: The data-node stores the data recieved from the server in the node's directory.
 
-How to run it?
+*How to run it?
    - Run in a terminal `python data_node.py <port> <name-of-chunk-directory>`
    - Note: The server must be running to recieve the node. 
 
