@@ -19,7 +19,7 @@
 # 	The data node also receives the data from the clients when the client wants to write a file, and 
 # 	returns the data when the client wants to read a file.
 # 	
-# 	" Usage : ./data_node <port> <name of chunk directory>"
+# 	" Usage : python data_node.py <port> <name of chunk directory>"
 # 	
 ##############################################################\
 
@@ -36,10 +36,17 @@ except:
     raise SystemExit(" Usage : ./data-node <port> <name of chunk directory>")
 
 try:
-    os.makedirs(os.path.join(BASE_DIR, path))
-    chunkDir = os.path.join(BASE_DIR, path)
-    i = 0
+	'''Make chunk directory and inizialize the chunks id to 0'''
+
+	os.makedirs(os.path.join(BASE_DIR, path))
+	chunkDir = os.path.join(BASE_DIR, path)
+	i = 0
+
 except:
+
+	'''If the directory exist use that directory and inizialize 
+	the chunks id to the number of files in the directory'''
+
 	chunkDir = os.path.join(BASE_DIR, path)
 	i = len(os.listdir(chunkDir))
 

@@ -23,10 +23,10 @@
 #   
 # 		usage:
 # 			Copy from computer to DFS:
-# 				python copy <path of the file> <metadata-server-ip-address:path on the DFS> 
+# 				python kopy.py <path of the file> <metadata-server-ip-address:path on the DFS> 
 # 				
 # 			Copy from DFS to computer:
-# 				python copy <metadata-server-ip-address:path on the DFS> <path of the file> 
+# 				python kopy.py <metadata-server-ip-address:path on the DFS> <path of the file> 
 ##############################################################
 '''Copy Command'''
 from mdsConf import * 

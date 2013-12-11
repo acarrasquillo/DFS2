@@ -1,11 +1,34 @@
+##############################################################
+#	DFS
+#	
+#	Project: Distributed File System
+#	University of Puerto Rico, Rio Piedras Campus
+#   Dept. of Computer Science
+#   CCOM 4017: Operating Systems - Fall'13
+#   
+#   Instructor: 
+#       Jose Ortiz-Ubarri
+#                           
+#   Group:
+#       Roxana Gonzalez (xxx-xx-xxxx)
+#       Miguel Roque (xxx-xx-xxxx)
+#       Abimael Carrasquillo Ayala (xxx-xx-xxxx)
+#	
+#   This file is for configuration and to functions utilized in other files
+# 	
+##############################################################\
 import os
 from socket import *
 from mds_db import *
 import json
 
-mds_PORT = 1000
-mds_HOST = "localhost"
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+mds_PORT = 1000 # Set the metadata server port
+mds_HOST = "localhost" # Set the metedata server port
+BASE_DIR = os.path.dirname(os.path.dirname(__file__)) # Set the base directory of the DFS
+
+###################################################################################
+# Functions to validate an IP address
+###################################################################################
 
 def validateIP(address):
 	if address=='localhost':
@@ -48,7 +71,7 @@ def makeChunks(inputFile,noOfNodes):
 		if k == noOfNodes:
 			chunk_Data = data[i:]
 			chunkList.append(chunk_Data)
-			print "Chunk %s is of size %s:" %(k,len(chunk_Data))
+			# print "Chunk %s is of size %s:" %(k,len(chunk_Data))
 			break
 
 		else:	

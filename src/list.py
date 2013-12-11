@@ -1,4 +1,27 @@
-from mdsConf import mds_PORT, mds_HOST
+##############################################################
+#	DFS
+#	
+#	Project: Distributed File System
+#	University of Puerto Rico, Rio Piedras Campus
+#   Dept. of Computer Science
+#   CCOM 4017: Operating Systems - Fall'13
+#   
+#   Instructor: 
+#       Jose Ortiz-Ubarri
+#                           
+#   Group:
+#       Roxana Gonzalez (xxx-xx-xxxx)
+#       Miguel Roque (xxx-xx-xxxx)
+#       Abimael Carrasquillo Ayala (xxx-xx-xxxx)
+#	
+#	This command list all the files and size that exist in the DFS
+# 	
+# 	" Usage : python list.py <metadata host>"
+# 	
+##############################################################\
+
+
+from mdsConf import mds_PORT
 from mds_db import *
 from socket import *
 import json
